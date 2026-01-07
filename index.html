@@ -2,12 +2,17 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
+
+<!-- Fix hiển thị mobile -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Love ❄️</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   height:100vh;
@@ -26,21 +31,25 @@ body{
   margin:auto;
   border-radius:22px;
   backdrop-filter:blur(8px);
-  background:rgba(255,255,255,0.05);
+  background:rgba(255,255,255,0.06);
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
   color:#fff;
+  padding:20px;
 }
 
 h1{
   font-weight:600;
   margin-bottom:10px;
+  font-size:28px;
 }
+
 p{
   min-height:28px;
+  font-size:17px;
   opacity:.95;
 }
 
@@ -89,17 +98,17 @@ button{
   100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}
 }
 
-/* Tuyết mùa đông thật */
+/* Tuyết mùa đông */
 .snowflake{
   position:fixed;
   top:-10px;
   background:white;
   border-radius:50%;
   pointer-events:none;
-  opacity:.6;
   filter:blur(.5px);
   animation:fall linear infinite;
 }
+
 @keyframes fall{
   to{ transform:translateY(110vh); }
 }
@@ -111,23 +120,54 @@ button{
   line-height:1.6;
   animation:fadeIn 2s ease;
 }
+
 @keyframes fadeIn{
   from{opacity:0; transform:translateY(20px)}
   to{opacity:1; transform:translateY(0)}
+}
+
+/* 📱 Mobile */
+@media (max-width:768px){
+  .container{
+    width:94%;
+    height:94%;
+    padding:24px;
+  }
+
+  h1{font-size:22px}
+  p{font-size:16px}
+
+  .buttons{
+    width:100%;
+    height:160px;
+  }
+
+  button{
+    font-size:18px;
+    padding:16px 34px;
+  }
+
+  #yes{left:20px; top:60px}
+  #no{right:20px; top:60px}
+
+  .after{
+    font-size:18px;
+    padding:0 10px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- Nhạc -->
+<!-- 🎵 Nhạc -->
 <audio id="bgm" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <div class="container" id="box">
-  <h1>LINH À ❤️❤️❤️ ❄️</h1>
-  <p id="msg">Anh có điều muốn nói với em nè ❤️ …</p>
+  <h1>Gửi LINH THÂN IUUU NÈ ❤️ ❄️</h1>
+  <p id="msg">ĐỒNG Ý LÀM NGƯỜI YÊU ANH NHÉ !</p>
 
   <div class="buttons" id="btnBox">
     <button id="yes">Có ❤️</button>
@@ -148,16 +188,23 @@ function playMusic(){
 document.addEventListener("click",playMusic,{once:true});
 document.addEventListener("touchstart",playMusic,{once:true});
 
-/* ❄️ Tuyết */
-for(let i=0;i<55;i++){
+/* ❄️ TUYẾT – NHIỀU + CÓ CHIỀU SÂU */
+const snowCount = window.innerWidth < 768 ? 80 : 130;
+
+for(let i=0;i<snowCount;i++){
   const s=document.createElement("div");
   s.className="snowflake";
+
   const size=Math.random()*3+1;
   s.style.width=size+"px";
   s.style.height=size+"px";
   s.style.left=Math.random()*100+"vw";
-  s.style.opacity=Math.random()*0.5+0.3;
-  s.style.animationDuration=15+Math.random()*25+"s";
+  s.style.opacity=Math.random()*0.5+0.25;
+
+  // Tuyết xa chậm, tuyết gần nhanh hơn
+  s.style.animationDuration =
+    (size < 2 ? 26 : 16) + Math.random()*20 + "s";
+
   document.body.appendChild(s);
 }
 
@@ -174,18 +221,19 @@ const MAX_SCALE=3.1;
 const SAFE=160;
 
 const texts=[
-  "Sao chưa gì đã ấn không vội vã thế hả :((( ",
-  "Anh không nói đùa đâu đấy ",
+  "Sao đã từ chối vội vàng thế :(((",
+  "Anh không nói đùa đâu",
   "Anh suy nghĩ lâu rồi ❄️",
-  "Tình cảm dành cho em là thật lòng",
-  "Anh thực sự muốn ở bên em",
-  "iuuuu em ❤️❤️❤️"
+  "Anh thật sự nghiêm túc với em",
+  "Anh muốn ở bên em",
+  "HIHI…"
 ];
 
 function centerYes(){
   const r=yesBtn.getBoundingClientRect();
   return {x:r.left+r.width/2,y:r.top+r.height/2};
 }
+
 function moveNo(){
   let x,y,d;
   const c=centerYes();
@@ -202,11 +250,15 @@ function moveNo(){
 function handleNo(){
   playMusic();
   if(step>=MAX_STEP) return;
+
   step++;
   msg.innerText=texts[step-1];
+
   yesBtn.style.transform=`scale(${1+(MAX_SCALE-1)*(step/MAX_STEP)})`;
   noBtn.style.transform=`scale(${Math.max(.45,1-step*.1)})`;
+
   moveNo();
+
   if(step===MAX_STEP){
     noBtn.style.display="none";
     yesBtn.classList.add("pulse");
@@ -217,11 +269,12 @@ function handleNo(){
 noBtn.addEventListener("mouseover",handleNo);
 noBtn.addEventListener("touchstart",handleNo);
 
-/* 💖 After Yes */
+/* 💖 AFTER YES */
 yesBtn.onclick=()=>{
   playMusic();
   btnBox.remove();
   msg.remove();
+
   const after=document.createElement("div");
   after.className="after";
   after.innerHTML=
@@ -229,6 +282,7 @@ yesBtn.onclick=()=>{
     "Anh không hứa điều gì to tát,<br>"+
     "chỉ hứa sẽ luôn nghiêm túc<br>"+
     "và trân trọng em ❄️";
+
   box.appendChild(after);
 };
 </script>
