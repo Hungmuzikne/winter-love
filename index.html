@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<title>Dành cho em ❄️</title>
+<meta charset="UTF-8">
+<title>Love ❄️</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
@@ -13,47 +13,38 @@ body{
   height:100vh;
   overflow:hidden;
   font-family:"Poppins",sans-serif;
-  background:linear-gradient(135deg,#1e3c72,#2a5298,#6a82fb);
+  background:
+    linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),
+    url("winter-bg.jpg") center/cover no-repeat fixed;
 }
 
-/* Tuyết rơi */
-.snow{
-  position:fixed;
-  top:-10px;
-  color:white;
-  font-size:14px;
-  animation:fall linear infinite;
-  opacity:.8;
-}
-@keyframes fall{
-  to{ transform:translateY(110vh); }
-}
-
+/* Container */
 .container{
   position:relative;
   width:90%;
   height:90%;
   margin:auto;
-  border:1.5px solid rgba(255,255,255,.6);
   border-radius:22px;
-  backdrop-filter:blur(6px);
+  backdrop-filter:blur(8px);
+  background:rgba(255,255,255,0.05);
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
+  color:#fff;
 }
 
 h1{
-  color:#fff;
   font-weight:600;
   margin-bottom:10px;
 }
 p{
-  color:rgba(255,255,255,.9);
-  min-height:26px;
+  min-height:28px;
+  opacity:.95;
 }
 
+/* Buttons */
 .buttons{
   position:relative;
   width:320px;
@@ -72,7 +63,7 @@ button{
 
 #yes{
   background:#fff;
-  color:#2a5298;
+  color:#1f3b4d;
   font-weight:600;
   position:absolute;
   left:40px;
@@ -82,90 +73,119 @@ button{
 
 #no{
   background:rgba(255,255,255,.85);
-  color:#2a5298;
+  color:#1f3b4d;
   position:absolute;
   right:40px;
   top:70px;
 }
 
+/* Pulse */
 .pulse{
-  animation:pulse 1.3s infinite;
+  animation:pulse 1.4s infinite;
 }
 @keyframes pulse{
   0%{box-shadow:0 0 0 0 rgba(255,255,255,.6)}
   70%{box-shadow:0 0 0 22px rgba(255,255,255,0)}
   100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}
 }
+
+/* Tuyết mùa đông thật */
+.snowflake{
+  position:fixed;
+  top:-10px;
+  background:white;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:.6;
+  filter:blur(.5px);
+  animation:fall linear infinite;
+}
+@keyframes fall{
+  to{ transform:translateY(110vh); }
+}
+
+/* After yes */
+.after{
+  font-size:20px;
+  max-width:520px;
+  line-height:1.6;
+  animation:fadeIn 2s ease;
+}
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px)}
+  to{opacity:1; transform:translateY(0)}
+}
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 Nhạc nền -->
+<!-- Nhạc -->
 <audio id="bgm" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<div class="container">
-  <h1>THÂN GỬI TỚI LINH NHÁ <3 ❄️</h1>
-  <p id="msg">Anh có điều muốn nói với em nè …</p>
+<div class="container" id="box">
+  <h1>LINH À ❤️❤️❤️ ❄️</h1>
+  <p id="msg">Anh có điều muốn nói với em nè ❤️ …</p>
 
-  <div class="buttons">
+  <div class="buttons" id="btnBox">
     <button id="yes">Có ❤️</button>
     <button id="no">Không 💔</button>
   </div>
 </div>
 
 <script>
-/* ❄️ Tạo tuyết rơi */
-for(let i=0;i<40;i++){
-  const snow=document.createElement("div");
-  snow.className="snow";
-  snow.innerText="❄️";
-  snow.style.left=Math.random()*100+"vw";
-  snow.style.animationDuration=5+Math.random()*5+"s";
-  snow.style.fontSize=10+Math.random()*10+"px";
-  document.body.appendChild(snow);
-}
-
-/* 🎵 Điều khiển nhạc – phát khi có tương tác */
-const music = document.getElementById("bgm");
-music.volume = 0.6;
-let musicPlayed = false;
-
+/* 🎵 Nhạc */
+const music=document.getElementById("bgm");
+music.volume=0.6;
+let played=false;
 function playMusic(){
-  if(musicPlayed) return;
+  if(played) return;
   music.play().catch(()=>{});
-  musicPlayed = true;
+  played=true;
+}
+document.addEventListener("click",playMusic,{once:true});
+document.addEventListener("touchstart",playMusic,{once:true});
+
+/* ❄️ Tuyết */
+for(let i=0;i<55;i++){
+  const s=document.createElement("div");
+  s.className="snowflake";
+  const size=Math.random()*3+1;
+  s.style.width=size+"px";
+  s.style.height=size+"px";
+  s.style.left=Math.random()*100+"vw";
+  s.style.opacity=Math.random()*0.5+0.3;
+  s.style.animationDuration=15+Math.random()*25+"s";
+  document.body.appendChild(s);
 }
 
-document.addEventListener("click", playMusic, { once:true });
-document.addEventListener("touchstart", playMusic, { once:true });
-
-/* ❤️ Logic nút */
+/* ❤️ Logic */
 const noBtn=document.getElementById("no");
 const yesBtn=document.getElementById("yes");
 const msg=document.getElementById("msg");
+const box=document.getElementById("box");
+const btnBox=document.getElementById("btnBox");
 
 let step=0;
 const MAX_STEP=6;
-const MAX_SCALE=3.2;
-const SAFE_RADIUS=160;
+const MAX_SCALE=3.1;
+const SAFE=160;
 
-const messages=[
-  "Em đọc kỹ nhé…",
-  "Suy nghĩ kỹ đi mà 😊",
+const texts=[
+  "Sao chưa gì đã ấn không vội vã thế hả :((( ",
+  "Anh không nói đùa đâu đấy ",
   "Anh suy nghĩ lâu rồi ❄️",
-  "Anh thật sự nghiêm túc đấy",
-  "Anh muốn ở bên em mà",
-  "Anh Yêu Em ❤️"
+  "Tình cảm dành cho em là thật lòng",
+  "Anh thực sự muốn ở bên em",
+  "iuuuu em ❤️❤️❤️"
 ];
 
 function centerYes(){
   const r=yesBtn.getBoundingClientRect();
   return {x:r.left+r.width/2,y:r.top+r.height/2};
 }
-
 function moveNo(){
   let x,y,d;
   const c=centerYes();
@@ -173,7 +193,7 @@ function moveNo(){
     x=Math.random()*(window.innerWidth-120);
     y=Math.random()*(window.innerHeight-80);
     d=Math.hypot(x-c.x,y-c.y);
-  }while(d<SAFE_RADIUS);
+  }while(d<SAFE);
   noBtn.style.position="fixed";
   noBtn.style.left=x+"px";
   noBtn.style.top=y+"px";
@@ -183,16 +203,10 @@ function handleNo(){
   playMusic();
   if(step>=MAX_STEP) return;
   step++;
-
-  msg.innerText=messages[step-1];
-
-  const scale=1+(MAX_SCALE-1)*(step/MAX_STEP);
-  yesBtn.style.transform=`scale(${scale})`;
-
+  msg.innerText=texts[step-1];
+  yesBtn.style.transform=`scale(${1+(MAX_SCALE-1)*(step/MAX_STEP)})`;
   noBtn.style.transform=`scale(${Math.max(.45,1-step*.1)})`;
-
   moveNo();
-
   if(step===MAX_STEP){
     noBtn.style.display="none";
     yesBtn.classList.add("pulse");
@@ -200,15 +214,24 @@ function handleNo(){
   }
 }
 
-noBtn.addEventListener("mouseover", handleNo);
-noBtn.addEventListener("touchstart", handleNo);
+noBtn.addEventListener("mouseover",handleNo);
+noBtn.addEventListener("touchstart",handleNo);
 
+/* 💖 After Yes */
 yesBtn.onclick=()=>{
   playMusic();
-  alert("Anh biết mà ❤️\nCảm ơn em vì đã chọn anh ❤️❤️❤️ ❄️");
+  btnBox.remove();
+  msg.remove();
+  const after=document.createElement("div");
+  after.className="after";
+  after.innerHTML=
+    "Cảm ơn em vì đã cho anh cơ hội.<br><br>"+
+    "Anh không hứa điều gì to tát,<br>"+
+    "chỉ hứa sẽ luôn nghiêm túc<br>"+
+    "và trân trọng em ❄️";
+  box.appendChild(after);
 };
 </script>
 
 </body>
 </html>
-
